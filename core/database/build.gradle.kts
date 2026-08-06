@@ -32,6 +32,14 @@ sqldelight {
     }
 }
 
+// Belt-and-suspenders: guarantee SQLDelight's generated LedgerEventDatabase
+// sources exist on disk before KSP (Room/Hilt annotation processing) reads
+// this module's source set, since DatabaseModule and LocalLedgerDataSource
+// reference that generated type directly.
+tasks.matching { it.name.contains("Ksp") }.configureEach {
+    dependsOn(tasks.matching { it.name.contains("LedgerEventDatabaseInterface") })
+}
+
 dependencies {
     api(project(":core:domain"))
 
@@ -56,4 +64,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.sqldelight.jvm.driver)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
