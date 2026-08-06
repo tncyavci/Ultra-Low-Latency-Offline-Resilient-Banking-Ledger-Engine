@@ -29,7 +29,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Unit tests (all modules)
-        run: ./gradlew test --console=plain --stacktrace
+        run: ./gradlew test --console=plain
 
       - name: Upload test reports
         if: always()
@@ -58,7 +58,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Android Lint
-        run: ./gradlew lint --console=plain --stacktrace
+        run: ./gradlew lint --console=plain
 
       - name: Assemble debug APK
-        run: ./gradlew :app:assembleDebug --console=plain --stacktrace
+        run: ./gradlew :app:assembleDebug --console=plain
