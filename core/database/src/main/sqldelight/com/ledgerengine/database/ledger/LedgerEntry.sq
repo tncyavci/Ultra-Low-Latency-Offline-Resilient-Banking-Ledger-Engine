@@ -1,0 +1,73 @@
+-- Append-only ledger event log. This is the authoritative source of truth for
+-- every transaction that ever touched the device; nothing here is ever
+-- UPDATEd except the status/signature/server_sequence columns as an entry
+-- progresses through its sync lifecycle. Balances (core/database Room side)
+-- are a materialized projection derived from this table, never the reverse.
+CREATE TABLE ledger_entry (
+    id TEXT NOT NULL PRIMARY KEY,
+    idempotency_key TEXT NOT NULL,
+    account_id TEXT NOT NULL,
+    counterparty_account_id TEXT,
+    direction TEXT NOT NULL,
+    amount_minor_units INTEGER NOT NULL,
+    currency_code TEXT NOT NULL,
+    memo TEXT,
+    status TEXT NOT NULL,
+    hlc_timestamp TEXT NOT NULL,
+    created_at_epoch_millis INTEGER NOT NULL,
+    signature BLOB,
+    signing_key_id TEXT,
+    server_sequence INTEGER
+);
+
+CREATE UNIQUE INDEX ledger_entry_idempotency_key ON ledger_entry(idempotency_key);
+CREATE INDEX ledger_entry_account_hlc ON ledger_entry(account_id, hlc_timestamp DESC);
+CREATE INDEX ledger_entry_status ON ledger_entry(status);
+
+insertEntry:
+INSERT INTO ledger_entry(
+    id, idempotency_key, account_id, counterparty_account_id, direction,
+    amount_minor_units, currency_code, memo, status, hlc_timestamp,
+    created_at_epoch_millis, signature, signing_key_id, server_sequence
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateStatusAndSignature:
+UPDATE ledger_entry
+SET status = ?, signature = ?, signing_key_id = ?
+WHERE id = ?;
+
+updateAfterServerConfirmation:
+UPDATE ledger_entry
+SET status = ?, server_sequence = ?
+WHERE id = ?;
+
+selectById:
+SELECT * FROM ledger_entry WHERE id = ?;
+
+selectByIdempotencyKey:
+SELECT * FROM ledger_entry WHERE idempotency_key = ?;
+
+selectByAccount:
+SELECT * FROM ledger_entry
+WHERE account_id = ?
+ORDER BY hlc_timestamp DESC
+LIMIT ?;
+
+selectQueuedForSync:
+SELECT * FROM ledger_entry
+WHERE status IN ('SIGNED', 'QUEUED')
+ORDER BY hlc_timestamp ASC;
+
+selectSignedTotalForAccount:
+SELECT COALESCE(SUM(
+    CASE direction WHEN 'CREDIT' THEN amount_minor_units ELSE -amount_minor_units END
+), 0) AS total
+FROM ledger_entry
+WHERE account_id = ? AND status = 'CONFIRMED';
+
+selectPendingTotalForAccount:
+SELECT COALESCE(SUM(
+    CASE direction WHEN 'CREDIT' THEN amount_minor_units ELSE -amount_minor_units END
+), 0) AS total
+FROM ledger_entry
+WHERE account_id = ? AND status IN ('PENDING_LOCAL', 'SIGNED', 'QUEUED', 'SYNCING');
