@@ -58,12 +58,12 @@ class ConflictResolutionEngine(
      *   WebSocket subscription or the response of a batched sync call).
      */
     fun reconcile(
-        localByIdempotencyKey: (com.ledgerengine.domain.model.IdempotencyKey) -> LedgerEntry?,
+        localByIdempotencyKey: suspend (com.ledgerengine.domain.model.IdempotencyKey) -> LedgerEntry?,
         remoteEvents: Flow<LedgerEntry>,
     ): Flow<ConflictResolution> = remoteEvents.map { remote -> resolveOne(localByIdempotencyKey, remote) }
 
-    fun resolveOne(
-        localByIdempotencyKey: (com.ledgerengine.domain.model.IdempotencyKey) -> LedgerEntry?,
+    suspend fun resolveOne(
+        localByIdempotencyKey: suspend (com.ledgerengine.domain.model.IdempotencyKey) -> LedgerEntry?,
         remote: LedgerEntry,
     ): ConflictResolution {
         if (!verifySignature(remote)) {

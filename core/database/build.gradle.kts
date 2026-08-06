@@ -69,7 +69,3 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.sqldelight.jvm.driver)
 }
-
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-}

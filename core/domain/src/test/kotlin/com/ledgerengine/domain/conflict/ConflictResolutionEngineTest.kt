@@ -9,6 +9,7 @@ import com.ledgerengine.domain.model.Money
 import com.ledgerengine.domain.model.TransactionDirection
 import com.ledgerengine.domain.model.TransactionId
 import com.ledgerengine.domain.model.TransactionStatus
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -41,7 +42,7 @@ class ConflictResolutionEngineTest {
     )
 
     @Test
-    fun `unknown remote entry with no local match is treated as new`() {
+    fun `unknown remote entry with no local match is treated as new`() = runTest {
         val engine = ConflictResolutionEngine(verifySignature = { true })
         val remote = entry("k1")
 
@@ -51,7 +52,7 @@ class ConflictResolutionEngineTest {
     }
 
     @Test
-    fun `matching idempotency key and identical content confirms the local entry`() {
+    fun `matching idempotency key and identical content confirms the local entry`() = runTest {
         val engine = ConflictResolutionEngine(verifySignature = { true })
         val local = entry("k1", status = TransactionStatus.SYNCING)
         val remote = local.copy(status = TransactionStatus.CONFIRMED, serverSequence = 42)
@@ -62,7 +63,7 @@ class ConflictResolutionEngineTest {
     }
 
     @Test
-    fun `invalid signature is never trusted regardless of local state`() {
+    fun `invalid signature is never trusted regardless of local state`() = runTest {
         val engine = ConflictResolutionEngine(verifySignature = { false })
         val remote = entry("k1")
 
@@ -72,7 +73,7 @@ class ConflictResolutionEngineTest {
     }
 
     @Test
-    fun `earlier remote HLC supersedes a later conflicting local entry`() {
+    fun `earlier remote HLC supersedes a later conflicting local entry`() = runTest {
         val engine = ConflictResolutionEngine(verifySignature = { true })
         val earlierHlc = clock.tick().toSortableString()
         val laterHlc = clock.tick().toSortableString()
@@ -86,7 +87,7 @@ class ConflictResolutionEngineTest {
     }
 
     @Test
-    fun `same key with different content and later remote HLC is an integrity violation`() {
+    fun `same key with different content and later remote HLC is an integrity violation`() = runTest {
         val engine = ConflictResolutionEngine(verifySignature = { true })
         val earlierHlc = clock.tick().toSortableString()
         val laterHlc = clock.tick().toSortableString()
