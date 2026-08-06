@@ -85,7 +85,8 @@ testable with plain JUnit, no emulator, no mocks-of-mocks.
 Both are opened through the same `net.zetetic:android-database-sqlcipher`
 `SupportFactory`, so both databases are encrypted at rest with a passphrase
 that itself never leaves the Android Keystore in cleartext
-(`DatabasePassphraseProvider`, wrapped via `EncryptedSharedPreferences`).
+(`DatabasePassphraseProvider`, AES-256-GCM-encrypted via Tink with a
+Keystore-resident key).
 
 ### Cryptographic signing
 

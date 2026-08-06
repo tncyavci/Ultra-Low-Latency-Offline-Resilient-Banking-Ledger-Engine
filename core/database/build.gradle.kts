@@ -60,7 +60,7 @@ dependencies {
     implementation(libs.sqldelight.android.driver)
     implementation(libs.sqldelight.coroutines)
 
-    implementation(libs.androidx.security.crypto)
+    implementation(libs.tink.android)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
