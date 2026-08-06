@@ -4,7 +4,6 @@ kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
 coroutines = "1.9.0"
 compose-bom = "2024.09.03"
-compose-compiler = "1.5.15"
 activity-compose = "1.9.2"
 lifecycle = "2.8.6"
 room = "2.6.1"
@@ -98,6 +97,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
