@@ -1,5 +1,7 @@
 # Ledger Engine
 
+[![CI](https://github.com/tncyavci/Ultra-Low-Latency-Offline-Resilient-Banking-Ledger-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/tncyavci/Ultra-Low-Latency-Offline-Resilient-Banking-Ledger-Engine/actions/workflows/ci.yml)
+
 **An offline-resilient, cryptographically-verified banking ledger for Android — zero data loss when the network disappears.**
 
 This is a from-scratch, multi-module Android application demonstrating a
