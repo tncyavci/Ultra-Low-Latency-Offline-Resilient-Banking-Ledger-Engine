@@ -20,6 +20,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    sourceSets {
+        getByName("main") {
+            kotlin.srcDir(layout.buildDirectory.dir("generated/sqldelight/code/LedgerEventDatabase/commonMain"))
+        }
+    }
 }
 
 kotlin {
@@ -41,7 +47,7 @@ sqldelight {
 // this module's source set, since DatabaseModule and LocalLedgerDataSource
 // reference that generated type directly.
 tasks.matching { it.name.startsWith("ksp") }.configureEach {
-    dependsOn(tasks.matching { it.name.contains("LedgerEventDatabaseInterface") })
+    dependsOn("generateCommonMainLedgerEventDatabaseInterface")
 }
 
 dependencies {
