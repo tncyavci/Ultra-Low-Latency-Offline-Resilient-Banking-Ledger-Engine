@@ -40,7 +40,7 @@ sqldelight {
 // sources exist on disk before KSP (Room/Hilt annotation processing) reads
 // this module's source set, since DatabaseModule and LocalLedgerDataSource
 // reference that generated type directly.
-tasks.matching { it.name.contains("Ksp") }.configureEach {
+tasks.matching { it.name.startsWith("ksp") }.configureEach {
     dependsOn(tasks.matching { it.name.contains("LedgerEventDatabaseInterface") })
 }
 
