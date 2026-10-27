@@ -1,6 +1,7 @@
 package com.ledgerengine.sync
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,7 +13,9 @@ import javax.inject.Singleton
  * uses to attribute and rate-limit sync traffic.
  */
 @Singleton
-class DeviceIdentityProvider @Inject constructor(context: Context) {
+class DeviceIdentityProvider @Inject constructor(
+    @ApplicationContext context: Context,
+) {
 
     val deviceId: String by lazy {
         val prefs = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE)

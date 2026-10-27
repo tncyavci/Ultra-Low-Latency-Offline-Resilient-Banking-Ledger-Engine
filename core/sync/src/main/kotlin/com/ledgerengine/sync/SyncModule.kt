@@ -8,6 +8,10 @@ import com.ledgerengine.crypto.VerificationKeyProvider
 import com.ledgerengine.domain.clock.HybridLogicalClock
 import com.ledgerengine.domain.conflict.ConflictResolutionEngine
 import com.ledgerengine.domain.repository.LedgerRepository
+import com.ledgerengine.domain.usecase.ObserveAccountBalanceUseCase
+import com.ledgerengine.domain.usecase.ObserveTransactionsUseCase
+import com.ledgerengine.domain.usecase.ReconcileLedgerUseCase
+import com.ledgerengine.domain.usecase.SubmitTransactionUseCase
 import com.ledgerengine.network.LedgerApiClient
 import com.ledgerengine.network.NetworkConfig
 import dagger.Binds
@@ -73,6 +77,22 @@ object SyncModule {
     @Provides
     @Singleton
     fun provideLedgerApiClient(config: NetworkConfig): LedgerApiClient = LedgerApiClient(config)
+
+    @Provides
+    fun provideObserveAccountBalanceUseCase(repository: LedgerRepository): ObserveAccountBalanceUseCase =
+        ObserveAccountBalanceUseCase(repository)
+
+    @Provides
+    fun provideObserveTransactionsUseCase(repository: LedgerRepository): ObserveTransactionsUseCase =
+        ObserveTransactionsUseCase(repository)
+
+    @Provides
+    fun provideSubmitTransactionUseCase(repository: LedgerRepository): SubmitTransactionUseCase =
+        SubmitTransactionUseCase(repository)
+
+    @Provides
+    fun provideReconcileLedgerUseCase(repository: LedgerRepository): ReconcileLedgerUseCase =
+        ReconcileLedgerUseCase(repository)
 }
 
 /**
