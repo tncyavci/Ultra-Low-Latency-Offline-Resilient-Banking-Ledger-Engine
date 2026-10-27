@@ -31,8 +31,9 @@ class RemoteEventReconciler @Inject constructor(
         apiClient.observeTransactionEvents(sinceServerSequence)
             .map { it.toDomain() }
             .collect { remoteEntry ->
+                val existingLocal = localDataSource.findByIdempotencyKey(remoteEntry.idempotencyKey)
                 val resolution = conflictEngine.resolveOne(
-                    localByIdempotencyKey = { localDataSource.findByIdempotencyKey(remoteEntry.idempotencyKey) },
+                    localByIdempotencyKey = { existingLocal },
                     remote = remoteEntry,
                 )
                 apply(resolution)

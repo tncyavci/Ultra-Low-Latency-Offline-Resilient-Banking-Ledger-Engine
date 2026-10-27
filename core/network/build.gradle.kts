@@ -12,7 +12,7 @@ dependencies {
     // Ktor's CIO engine is pure Kotlin/coroutines with no platform-specific native
     // dependency, so this module stays a plain JVM library — usable unmodified from
     // the Android app and fully unit-testable here without an emulator.
-    implementation(libs.ktor.client.core)
+    api(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
