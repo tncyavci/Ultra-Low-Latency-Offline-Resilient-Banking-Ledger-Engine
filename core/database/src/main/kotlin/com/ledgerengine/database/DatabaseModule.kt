@@ -52,5 +52,11 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideLedgerEventDatabase(driver: SqlDriver): LedgerEventDatabase = LedgerEventDatabase(driver)
+    fun provideLocalLedgerDataSource(
+        driver: SqlDriver,
+        accountDao: AccountDao,
+    ): LocalLedgerDataSource = LocalLedgerDataSource(
+        eventDatabase = LedgerEventDatabase(driver),
+        accountDao = accountDao,
+    )
 }

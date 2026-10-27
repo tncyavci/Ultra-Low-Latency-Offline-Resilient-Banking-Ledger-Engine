@@ -20,12 +20,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    sourceSets {
-        getByName("main") {
-            kotlin.srcDir(layout.buildDirectory.dir("generated/sqldelight/code/LedgerEventDatabase/commonMain"))
-        }
-    }
 }
 
 kotlin {
@@ -40,14 +34,6 @@ sqldelight {
             packageName.set("com.ledgerengine.database.ledger")
         }
     }
-}
-
-// Belt-and-suspenders: guarantee SQLDelight's generated LedgerEventDatabase
-// sources exist on disk before KSP (Room/Hilt annotation processing) reads
-// this module's source set, since DatabaseModule and LocalLedgerDataSource
-// reference that generated type directly.
-tasks.matching { it.name.startsWith("ksp") }.configureEach {
-    dependsOn("generateCommonMainLedgerEventDatabaseInterface")
 }
 
 dependencies {

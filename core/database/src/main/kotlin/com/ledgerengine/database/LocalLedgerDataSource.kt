@@ -16,8 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Facade over the two-layer local store: the SQLDelight append-only event log
@@ -25,8 +23,7 @@ import javax.inject.Singleton
  * Every mutating call updates both within the queries' own transaction scope
  * so the two never observably diverge from a UI collector's point of view.
  */
-@Singleton
-class LocalLedgerDataSource @Inject constructor(
+class LocalLedgerDataSource(
     private val eventDatabase: LedgerEventDatabase,
     private val accountDao: AccountDao,
 ) {
