@@ -50,6 +50,10 @@ kotlin {
     }
 }
 
+configurations.configureEach {
+    exclude(group = "com.google.crypto.tink", module = "tink")
+}
+
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:crypto"))
